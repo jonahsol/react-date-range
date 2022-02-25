@@ -23,6 +23,7 @@ class DateRange extends Component {
       onChange,
       maxDate,
       moveRangeOnFirstSelection,
+      moveRangeBy,
       retainEndDateOnFirstSelection,
       disabledDates,
     } = this.props;
@@ -37,7 +38,7 @@ class DateRange extends Component {
       endDate = value.endDate;
     } else if (focusedRange[1] === 0) {
       // startDate selection
-      const dayOffset = differenceInCalendarDays(endDate || now, startDate);
+      const dayOffset = moveRangeBy !== undefined ? moveRangeBy : differenceInCalendarDays(endDate || now, startDate);
       const calculateEndDate = () => {
         if (moveRangeOnFirstSelection) {
           return addDays(value, dayOffset);
@@ -65,27 +66,12 @@ class DateRange extends Component {
       [startDate, endDate] = [endDate, startDate];
     }
 
-    const inValidDatesWithinRange = disabledDates.filter(disabledDate =>
-      isWithinInterval(disabledDate, {
-        start: startDate,
-        end: endDate,
-      })
-    );
-
-    if (inValidDatesWithinRange.length > 0) {
-      if (isStartDateSelected) {
-        startDate = addDays(max(inValidDatesWithinRange), 1);
-      } else {
-        endDate = addDays(min(inValidDatesWithinRange), -1);
-      }
-    }
-
     if (!nextFocusRange) {
       const nextFocusRangeIndex = findNextRangeIndex(this.props.ranges, focusedRange[0]);
       nextFocusRange = [nextFocusRangeIndex, 0];
     }
     return {
-      wasValid: !(inValidDatesWithinRange.length > 0),
+      wasValid: true,
       range: { startDate, endDate },
       nextFocusRange: nextFocusRange,
     };

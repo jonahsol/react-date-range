@@ -418,7 +418,7 @@ class Calendar extends PureComponent {
         onMouseLeave={() => {
           this.setState({ drag: { status: false, range: {} } });
         }}>
-        {showDateDisplay && this.renderDateDisplay()}
+        {showDateDisplay && (this.props.renderDateDisplay ? this.props.renderDateDisplay() : this.renderDateDisplay())}
         {monthAndYearRenderer(focusedDate, this.changeShownDate, this.props)}
         {scroll.enabled ? (
           <div>
